@@ -125,7 +125,7 @@ public class EnviarEmailController implements Initializable {
 			email.send();
 
 			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("");
+			alert.setTitle("Mensaje enviado");
 			alert.setHeaderText("Mensaje Enviado con exito a " + model.getDestinatario());
 			alert.setContentText("");
 
