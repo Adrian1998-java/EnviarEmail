@@ -77,6 +77,7 @@ public class EnviarEmailController implements Initializable {
 		asuntoText.textProperty().bindBidirectional(model.asuntoProperty());
 		
 		asuntoAreaText.textProperty().bindBidirectional(model.asuntoAreaProperty());
+		asuntoAreaText.setWrapText(true);
 		
 		puertoText.textProperty().bindBidirectional(model.puertoProperty());
 		
@@ -89,11 +90,6 @@ public class EnviarEmailController implements Initializable {
 	public BorderPane getView() {
 		return view;
 	}
-	
-	@FXML
-	void onCerrarButton(ActionEvent event) {
-
-	}
 
 	@FXML
 	void onEnviarButton(ActionEvent event) {
@@ -102,7 +98,19 @@ public class EnviarEmailController implements Initializable {
 
 	@FXML
 	void onVaciarButton(ActionEvent event) {
-
+		
+		nombreText.clear();
+		remitenteText.clear();
+		destinatarioText.clear();
+		asuntoText.clear();
+		asuntoAreaText.clear();
+		puertoText.clear();
+		passwrdText.clear();
+		conexionCheck.setSelected(false);
 	}
 
+	@FXML
+	void onCerrarButton(ActionEvent event) {
+		System.exit(0);
+	}
 }
