@@ -17,6 +17,10 @@ import javafx.scene.layout.BorderPane;
 
 public class EnviarEmailController implements Initializable {
 
+	//Model
+	private EnviarEmailModel model = new EnviarEmailModel(); 
+	
+	//View 
 	@FXML
 	private BorderPane view;
 
@@ -63,10 +67,29 @@ public class EnviarEmailController implements Initializable {
 	
 	
 	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
+		
+		nombreText.textProperty().bindBidirectional(model.nombreProperty());
+		
+		remitenteText.textProperty().bindBidirectional(model.remitenteProperty());
+		
+		destinatarioText.textProperty().bindBidirectional(model.destinatarioProperty());
+		
+		asuntoText.textProperty().bindBidirectional(model.asuntoProperty());
+		
+		asuntoAreaText.textProperty().bindBidirectional(model.asuntoAreaProperty());
+		
+		puertoText.textProperty().bindBidirectional(model.puertoProperty());
+		
+		passwrdText.textProperty().bindBidirectional(model.passwrdProperty());
+		
+		conexionCheck.selectedProperty().bindBidirectional(model.conexionProperty());
 
 	}
 
+	public BorderPane getView() {
+		return view;
+	}
+	
 	@FXML
 	void onCerrarButton(ActionEvent event) {
 
