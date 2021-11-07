@@ -20,7 +20,6 @@ public class App extends Application {
 		primaryStage.setTitle("Enviar email");
 		primaryStage.getIcons().add(new Image("/images/email-send-icon-32x32.png"));
 		primaryStage.setScene(scene);
-		primaryStage.setResizable(false);
 		primaryStage.show();
 		
 	}
