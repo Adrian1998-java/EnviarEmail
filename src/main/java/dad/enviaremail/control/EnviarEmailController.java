@@ -30,7 +30,6 @@ public class EnviarEmailController implements Initializable {
 	// Model
 	private EnviarEmailModel model = new EnviarEmailModel();
 
-	Email email = new SimpleEmail();
 
 	// View
 	@FXML
@@ -99,7 +98,7 @@ public class EnviarEmailController implements Initializable {
 		puertoText.setText("465");
 		conexionCheck.setSelected(true);
 		remitenteText.setText("dad.iesdpm@gmail.com");
-		passwrdText.setText("Minikit0$");
+		passwrdText.setText("chucknorri$21");
 		destinatarioText.setText("scraggy1998@gmail.com");
 		asuntoText.setText("Hola");
 		asuntoAreaText.setText("Esto es un mensaje");
@@ -113,20 +112,23 @@ public class EnviarEmailController implements Initializable {
 	@FXML
 	void onEnviarButton(ActionEvent event) {
 		try {
+			Email email = new SimpleEmail();
+			
 			email.setHostName(model.getNombre());
 			email.setSmtpPort(Integer.parseInt(model.getPuerto()));
-			email.setAuthentication(model.getDestinatario(), model.getPasswrd());
+			email.setAuthenticator(new DefaultAuthenticator(model.getRemitente() , model.getPasswrd()));
 			email.setSSLOnConnect(model.isConexion());
 			email.setFrom(model.getRemitente());
 			email.setSubject(model.getAsunto());
 			email.setMsg(model.getAsuntoArea());
+			email.addTo(model.getDestinatario());
 			email.addTo(model.getDestinatario());
 
 			email.send();
 
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Mensaje enviado");
-			alert.setHeaderText("Mensaje Enviado con exito a " + model.getDestinatario());
+			alert.setHeaderText("Mensaje Enviado con exito a '" + model.getDestinatario()+"'");
 			alert.setContentText("");
 
 			alert.showAndWait();
