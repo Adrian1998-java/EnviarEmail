@@ -11,6 +11,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ public class EnviarEmailController implements Initializable {
 	// Model
 	private EnviarEmailModel model = new EnviarEmailModel();
 
+	private Task<Void> tarea;
 
 	// View
 	@FXML
@@ -111,24 +113,33 @@ public class EnviarEmailController implements Initializable {
 
 	@FXML
 	void onEnviarButton(ActionEvent event) {
-		try {
-			Email email = new SimpleEmail();
-			
-			email.setHostName(model.getNombre());
-			email.setSmtpPort(Integer.parseInt(model.getPuerto()));
-			email.setAuthenticator(new DefaultAuthenticator(model.getRemitente() , model.getPasswrd()));
-			email.setSSLOnConnect(model.isConexion());
-			email.setFrom(model.getRemitente());
-			email.setSubject(model.getAsunto());
-			email.setMsg(model.getAsuntoArea());
-			email.addTo(model.getDestinatario());
-			email.addTo(model.getDestinatario());
+		
+		tarea = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
 
-			email.send();
+				Email email = new SimpleEmail();
 
+				email.setHostName(model.getNombre());
+				email.setSmtpPort(Integer.parseInt(model.getPuerto()));
+				email.setAuthenticator(new DefaultAuthenticator(model.getRemitente(), model.getPasswrd()));
+				email.setSSLOnConnect(model.isConexion());
+				email.setFrom(model.getRemitente());
+				email.setSubject(model.getAsunto());
+				email.setMsg(model.getAsuntoArea());
+				email.addTo(model.getDestinatario());
+				email.addTo(model.getDestinatario());
+
+				email.send();
+
+				return null;
+			}
+		};
+
+		tarea.setOnSucceeded(e -> {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Mensaje enviado");
-			alert.setHeaderText("Mensaje Enviado con exito a '" + model.getDestinatario()+"'");
+			alert.setHeaderText("Mensaje Enviado con exito a '" + model.getDestinatario() + "'");
 			alert.setContentText("");
 
 			alert.showAndWait();
@@ -137,15 +148,28 @@ public class EnviarEmailController implements Initializable {
 			asuntoText.clear();
 			asuntoAreaText.clear();
 
-		} catch (EmailException e) {
-			Alert alert = new Alert(AlertType.WARNING);
+		});
+
+		tarea.setOnFailed(e -> {
+			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setHeaderText("No se pudo enviar el email");
 			alert.setContentText("Se ha dado el siguiente error: \n" + e);
 
 			alert.showAndWait();
-		}
+		});
 
+		tarea.setOnCancelled(e -> {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Cancelado");
+			alert.setHeaderText("No se pudo enviar el email");
+			alert.setContentText("Se ha interrumpido el proceso");
+
+			alert.showAndWait();
+		});
+		
+		
+		new Thread(tarea).start();
 	}
 
 	@FXML
